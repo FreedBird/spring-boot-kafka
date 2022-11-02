@@ -1,0 +1,14 @@
+package ${packageName}.service;
+
+import ${packageName}.domain.${ClassName};
+import com.platform.common.web.service.BaseService;
+
+/**
+ * ${functionName}Service接口
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+public interface ${ClassName}Service extends BaseService<${ClassName}> {
+
+}

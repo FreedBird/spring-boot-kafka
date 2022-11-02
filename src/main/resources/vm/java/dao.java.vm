@@ -1,0 +1,17 @@
+package ${packageName}.dao;
+
+import ${packageName}.domain.${ClassName};
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import java.util.List;
+
+/**
+ * ${functionName}Dao接口
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+public interface ${ClassName}Dao extends BaseMapper<${ClassName}> {
+
+    List<${ClassName}> queryList(${ClassName} ${className});
+
+}

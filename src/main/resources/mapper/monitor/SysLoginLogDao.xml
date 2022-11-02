@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.modules.monitor.dao.SysLoginLogDao">
+
+    <sql id="baseSql">
+        select info_id, user_name, ip_addr, ip_location, browser, os, status, msg, create_time
+        from sys_login_log
+    </sql>
+
+    <select id="queryList" resultType="com.platform.modules.monitor.domain.SysLoginLog">
+        <include refid="baseSql"/>
+        <where>
+            <if test="ipAddr != null and ipAddr != ''">
+                AND ip_addr = #{ipAddr}
+            </if>
+            <if test="status != null">
+                AND status = #{status.code}
+            </if>
+            <if test="userName != null and userName != ''">
+                AND user_name like concat('%', #{userName}, '%')
+            </if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(create_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                and date_format(create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+        </where>
+        order by info_id desc
+    </select>
+
+</mapper> 

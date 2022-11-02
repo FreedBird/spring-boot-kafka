@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.modules.sys.dao.SysMenuDao">
+
+    <sql id="baseSql">
+        select menu_id, menu_name, parent_id, order_num, path, component, is_frame, menu_type, visible, status, ifnull(perms,'') as perms, icon
+		from sys_menu
+    </sql>
+
+    <sql id="baseSql2">
+        select m.menu_id, m.menu_name, m.parent_id, m.order_num, m.path, m.component, m.is_frame, m.menu_type, m.visible, m.status, ifnull(m.perms,'') as perms, m.icon
+		from sys_menu m
+    </sql>
+
+    <select id="queryList" resultType="com.platform.modules.sys.domain.SysMenu">
+        <include refid="baseSql"/>
+        <where>
+            <if test="menuName != null and menuName != ''">
+                AND menu_name like concat('%', #{menuName}, '%')
+            </if>
+            <if test="visible != null">
+                AND visible = #{visible.code}
+            </if>
+            <if test="status != null">
+                AND status = #{status.code}
+            </if>
+        </where>
+        order by parent_id, order_num
+    </select>
+
+    <select id="queryAllMenuTree" resultType="com.platform.modules.sys.domain.SysMenu">
+        select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status,
+        ifnull(m.perms,'') as perms, m.is_frame, m.menu_type, m.icon, m.order_num
+        from sys_menu m
+        <where>
+            and m.status = 'Y'
+            and m.visible = 'Y'
+        </where>
+        order by m.parent_id, m.order_num
+    </select>
+
+    <select id="queryMenuTreeByRoleId" resultType="com.platform.modules.sys.domain.SysMenu">
+        select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status,
+        ifnull(m.perms,'') as perms, m.is_frame, m.menu_type, m.icon, m.order_num
+        from sys_menu m
+        left join sys_role_menu rm on m.menu_id = rm.menu_id
+        <where>
+            and m.status = 'Y'
+            and m.visible = 'Y'
+            and rm.role_id = #{roleId}
+        </where>
+        order by m.parent_id, m.order_num
+    </select>
+
+    <select id="queryListByRoleId" resultType="com.platform.modules.sys.domain.SysMenu">
+        <include refid="baseSql2"/>
+        left join sys_role_menu rm on m.menu_id = rm.menu_id
+        where rm.role_id = #{roleId}
+        order by m.parent_id, m.order_num
+	</select>
+
+    <select id="queryAllPerms" resultType="java.lang.String">
+		select distinct perms
+		from sys_menu
+		where status = 'Y' and perms != ''
+	</select>
+
+    <select id="queryPermsByRoleId" resultType="java.lang.String">
+		select distinct m.perms
+		from sys_menu m
+        left join sys_role_menu rm on m.menu_id = rm.menu_id
+		where m.status = 'Y' and m.perms != '' and rm.role_id = #{roleId}
+	</select>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.modules.sys.dao.SysConfigDao">
+
+    <sql id="baseSql">
+        select config_id, config_name, config_key, config_value, config_type, remark
+		from sys_config
+    </sql>
+
+    <select id="queryList" resultType="com.platform.modules.sys.domain.SysConfig">
+        <include refid="baseSql"/>
+        <where>
+            <if test="configName != null and configName != ''">
+                AND config_name like concat('%', #{configName}, '%')
+            </if>
+            <if test="configType != null and configType != ''">
+                AND config_type = #{configType}
+            </if>
+            <if test="configKey != null and configKey != ''">
+                AND config_key like concat('%', #{configKey}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

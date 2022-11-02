@@ -1,0 +1,22 @@
+## 父菜单id
+#set($parentId = ${sqlId}+'0')
+
+-- 菜单 SQL
+insert into sys_menu (menu_id, menu_name, parent_id, order_num, path, component, is_frame, menu_type, visible, status, perms, icon, remark)
+values(${parentId}, '${functionName}', '0', '1', '${businessName}', '${moduleName}/${businessName}/index', 'N', 'C', 'Y', 'Y', '${permissionPrefix}:list', '#', '${functionName}');
+
+-- 按钮 SQL
+insert into sys_menu  (menu_id, menu_name, parent_id, order_num, path, component, is_frame, menu_type, visible, status, perms, icon, remark)
+values(${sqlId}1, '查询', $parentId, '1',  '#', '', 'N',  'F', 'Y',  'Y', '${permissionPrefix}:query',        '#', '查询');
+
+insert into sys_menu  (menu_id, menu_name, parent_id, order_num, path, component, is_frame, menu_type, visible, status, perms, icon, remark)
+values(${sqlId}2, '新增', $parentId, '2',  '#', '', 'N',  'F', 'Y',  'Y', '${permissionPrefix}:add',          '#', '新增');
+
+insert into sys_menu  (menu_id, menu_name, parent_id, order_num, path, component, is_frame, menu_type, visible, status, perms, icon, remark)
+values(${sqlId}3, '修改', $parentId, '3',  '#', '', 'N',  'F', 'Y',  'Y', '${permissionPrefix}:edit',         '#', '修改');
+
+insert into sys_menu  (menu_id, menu_name, parent_id, order_num, path, component, is_frame, menu_type, visible, status, perms, icon, remark)
+values(${sqlId}4, '删除', $parentId, '4',  '#', '', 'N',  'F', 'Y',  'Y', '${permissionPrefix}:remove',       '#', '删除');
+
+insert into sys_menu  (menu_id, menu_name, parent_id, order_num, path, component, is_frame, menu_type, visible, status, perms, icon, remark)
+values(${sqlId}5, '导出', $parentId, '5',  '#', '', 'N',  'F', 'Y',  'Y', '${permissionPrefix}:export',       '#', '导出');

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.modules.sys.dao.SysNoticeDao">
+
+    <sql id="baseSql">
+        select notice_id, notice_title, notice_type, notice_content, status, create_time, remark
+		from sys_notice
+    </sql>
+
+    <select id="queryList" resultType="com.platform.modules.sys.domain.SysNotice">
+        <include refid="baseSql"/>
+        <where>
+            <if test="noticeTitle != null and noticeTitle != ''">
+                AND notice_title like concat('%', #{noticeTitle}, '%')
+            </if>
+            <if test="noticeType != null">
+                AND notice_type = #{noticeType.code}
+            </if>
+            <if test="status != null">
+                AND status = #{status.code}
+            </if>
+        </where>
+    </select>
+
+</mapper>

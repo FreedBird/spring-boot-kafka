@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.modules.tool.gen.dao.GenTableDao">
+
+    <sql id="baseSql">
+        select table_id, table_name, table_comment, class_name, tpl_category, package_name, module_name, business_name, function_name, function_author, options, remark from gen_table
+    </sql>
+
+    <select id="queryList" resultType="com.platform.modules.tool.gen.domain.GenTable">
+        <include refid="baseSql"/>
+        <where>
+            <if test="tableName != null and tableName != ''">
+                AND lower(table_name) like lower(concat('%', #{tableName}, '%'))
+            </if>
+            <if test="tableComment != null and tableComment != ''">
+                AND lower(table_comment) like lower(concat('%', #{tableComment}, '%'))
+            </if>
+        </where>
+    </select>
+
+    <select id="queryDbTableList" resultType="com.platform.modules.tool.gen.domain.GenTable">
+        select table_name, table_comment from information_schema.tables
+        where table_schema = (select database())
+        AND table_name NOT LIKE 'qrtz_%' AND table_name NOT LIKE 'gen_%'
+        AND table_name NOT IN (select table_name from gen_table)
+        <if test="tableName != null and tableName != ''">
+            AND lower(table_name) like lower(concat('%', #{tableName}, '%'))
+        </if>
+        <if test="tableComment != null and tableComment != ''">
+            AND lower(table_comment) like lower(concat('%', #{tableComment}, '%'))
+        </if>
+    </select>
+
+    <select id="queryDbTableListByNames" resultType="com.platform.modules.tool.gen.domain.GenTable">
+        select table_name, table_comment, create_time, update_time from information_schema.tables
+        where table_name NOT LIKE 'qrtz_%' and table_name NOT LIKE 'gen_%' and table_schema = (select database())
+        and table_name in
+        <foreach collection="array" item="name" open="(" separator="," close=")">
+            #{name}
+        </foreach>
+    </select>
+
+    <select id="queryDbTableByName" resultType="com.platform.modules.tool.gen.domain.GenTable">
+		select table_name, table_comment
+		from information_schema.tables
+		where table_comment <![CDATA[ <> ]]> '' and table_schema = (select database())
+		and table_name = #{tableName}
+	</select>
+
+</mapper> 
